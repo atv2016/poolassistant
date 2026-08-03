@@ -1,0 +1,141 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Pool Assistant login",
+        "data": {
+          "email": "Email",
+          "password": "Password",
+          "api_key": "Firebase API key",
+          "project_id": "Firebase project ID"
+        }
+      },
+      "pool": {
+        "title": "Select your pool(s)",
+        "data": {
+          "pool_id": "Pool"
+        }
+      },
+      "new_pool": {
+        "title": "Create a new pool",
+        "data": {
+          "name": "Pool name",
+          "volume_gallons": "Pool volume (gallons)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-enter your Pool Assistant password",
+        "description": "Your session for {email} has expired.",
+        "data": {
+          "password": "Password"
+        }
+      },
+      "discovery_confirm": {
+        "title": "Set up {name}?",
+        "description": "Pool Assistant found {name} on your account - add it to Home Assistant?"
+      }
+    },
+    "error": {
+      "auth_failed": "Could not log in - check your email and password.",
+      "cannot_connect": "Logged in, but couldn't fetch or create your pool. Check the API key and project ID.",
+      "no_selection": "Select at least one pool, or 'Create a new pool'.",
+      "already_configured_selection": "Looks like you've already added all of the pools you picked. Choose a different one, or select 'Create a new pool' to add a brand new pool."
+    },
+    "abort": {
+      "already_configured": "One or more pools in your selection are already configured.",
+      "already_in_progress": "This pool is already being set up elsewhere - check the Discovered section, or try again in a moment.",
+      "reauth_successful": "Re-authentication was successful."
+    }
+  },
+
+  "options": {
+    "step": {
+      "init": {
+        "sections": {
+          "tooltip_section": {
+            "name": "Manual entry tooltips",
+            "description": "Shows an ID lookup tooltip on manually logged entries, but the Pool Assistant app will treat them as system records and won't let you edit them there anymore (Home Assistant still can).",
+            "data": {
+              "surface_tooltip_ids": "Show ID lookup tooltip"
+            }
+          },
+          "polling_section": {
+            "name": "Polling",
+            "description": "How often Home Assistant checks Pool Assistant for updates.",
+            "data": {
+              "poll_interval_minutes": "Update interval (minutes)"
+            }
+          },
+          "discovery_section": {
+            "name": "New pool discovery",
+            "description": "Turn off if you don't want Home Assistant automatically offering pools created directly in the app.",
+            "data": {
+              "disable_auto_discovery": "Disable automatic pool discovery"
+            }
+          },
+          "temperature_section": {
+            "name": "Water temperature",
+            "description": "Link a temperature sensor to enable the automatic LSI sensor for this pool.",
+            "data": {
+              "temperature_entity": "Temperature sensor"
+            }
+          },
+          "ideal_ranges": {
+            "name": "Ideal ranges",
+            "description": "Override the default target range for any parameter. Each field shows its built-in default in its label - leave it blank to keep using that default.",
+            "data": {
+              "fcl_low": "Free Chlorine - ideal low (default 1.0)",
+              "fcl_high": "Free Chlorine - ideal high (default 3.0)",
+              "tcl_low": "Total Chlorine - ideal low (default 1.0)",
+              "tcl_high": "Total Chlorine - ideal high (default 3.0)",
+              "ccl_low": "Combined Chlorine - ideal low (default 0.0)",
+              "ccl_high": "Combined Chlorine - ideal high (default 0.2)",
+              "ph_low": "pH - ideal low (default 7.2)",
+              "ph_high": "pH - ideal high (default 7.6)",
+              "ta_low": "Total Alkalinity - ideal low (default 80)",
+              "ta_high": "Total Alkalinity - ideal high (default 120)",
+              "cya_low": "Cyanuric Acid - ideal low (default 30)",
+              "cya_high": "Cyanuric Acid - ideal high (default 50)",
+              "ch_low": "Calcium Hardness - ideal low (default 200)",
+              "ch_high": "Calcium Hardness - ideal high (default 400)",
+              "cu_low": "Copper - ideal low (default 0.0)",
+              "cu_high": "Copper - ideal high (default 0.3)",
+              "salt_low": "Salt - ideal low (default 2700)",
+              "salt_high": "Salt - ideal high (default 3400)",
+              "po4_low": "Phosphates - ideal low (no default set)",
+              "po4_high": "Phosphates - ideal high (no default set)",
+              "ao2_low": "Active Oxygen - ideal low (default 0.0)",
+              "ao2_high": "Active Oxygen - ideal high (default 6.0)",
+              "br2_low": "Bromine - ideal low (default 3.0)",
+              "br2_high": "Bromine - ideal high (default 5.0)"
+            }
+          }
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pool_status": {
+        "state": {
+          "ideal": "Ideal",
+          "needs_attention": "Needs Attention"
+        }
+      }
+    }
+  },
+  "issues": {
+    "pool_deleted": {
+      "title": "{name} no longer exists in your Pool Assistant account",
+      "description": "This pool appears to have been deleted from the app (or removed from your account) and can no longer be found. Home Assistant will keep trying and failing to update it until this is resolved.",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Remove {name} from Home Assistant?",
+            "description": "This pool no longer exists in your Pool Assistant account, so it can't be updated anymore. Removing it here only removes the Home Assistant integration entry - it won't affect anything in the app, since the pool is already gone there."
+          }
+        }
+      }
+    }
+  }
+}

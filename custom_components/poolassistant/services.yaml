@@ -1,0 +1,311 @@
+add_chemical:
+  name: Add Chemical
+  description: Log a chemical dose attached to an existing test session, the same way the app requires - a dose can't be logged on its own without accompanying readings, or the app misbehaves.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    result_id:
+      required: true
+      description: The result_id of an existing reading (e.g. from log_reading's response, or a Scuba3s scan) to attach this chemical dose alongside.
+      selector:
+        text:
+    chemical:
+      required: true
+      example: "liquid chlorine"
+      selector:
+        text:
+    amount:
+      required: true
+      example: 100
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    unit:
+      required: true
+      default: "Ml"
+      selector:
+        select:
+          options:
+            - "Ml"
+            - "Gr"
+            - "L"
+            - "Kg"
+
+log_reading:
+  name: Log Manual Reading
+  description: Manually log a water-chemistry test result, as if entered by hand in the app. Returns the generated result_id, which can be used with edit_reading/delete_reading/add_chemical afterward.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    parameter:
+      required: true
+      selector:
+        select:
+          options: ["fcl", "tcl", "ccl", "ph", "ta", "cya", "ch", "cu", "salt", "po4", "ao2", "br2"]
+    result:
+      required: true
+      selector:
+        number:
+          step: 0.01
+    note:
+      required: false
+      description: "Optional note attached to this test session, same as the app's notes field."
+      selector:
+        text:
+
+set_volume:
+  name: Set Pool Volume
+  description: Set the pool's volume, the same way the app's volume calculator saves it.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    volume_gallons:
+      required: true
+      selector:
+        number:
+          min: 0
+          step: 0.1
+
+create_pool:
+  name: Create New Pool
+  description: Create a brand new pool document, the same way the app does when adding a pool. Returns the new pool's ID, and automatically sets up a Home Assistant device for it.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    name:
+      required: true
+      selector:
+        text:
+    basin_type:
+      required: false
+      default: "pool"
+      selector:
+        select:
+          options: ["pool", "whirlpool"]
+          custom_value: true
+    volume_gallons:
+      required: true
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    surface_material:
+      required: false
+      description: "Confirmed: vinyl, stone. Others are guesses - use the custom value option if the app doesn't accept one."
+      selector:
+        select:
+          options: ["concrete", "tile", "stone", "fibreglass", "vinyl", "stainless steel", "other"]
+          custom_value: true
+    city:
+      required: false
+      selector:
+        text:
+    heater:
+      required: false
+      selector:
+        boolean:
+    water_profile:
+      required: false
+      default: "americas"
+      description: "Confirmed: americas, europe, africa. asia/australia are guesses - use the custom value option if needed."
+      selector:
+        select:
+          options: ["americas", "europe", "asia", "africa", "australia"]
+          custom_value: true
+    image:
+      required: false
+      description: "Pick an existing photo from the Media Browser, or upload one from your computer."
+      selector:
+        media:
+    image_file_path:
+      required: false
+      description: "Path to an image file on the HA filesystem (e.g. /config/www/pool.jpg) to use as the pool's photo."
+      selector:
+        text:
+    image_base64:
+      required: false
+      description: "Alternative to image_file_path/image - raw base64 image data, or a full data: URI."
+      selector:
+        text:
+
+calculate_lsi:
+  name: Calculate Langelier Saturation Index
+  description: Calculate water balance (LSI) the same way the app's calculator does. Uses latest tracked pH/alkalinity/hardness unless overridden; water temperature isn't tracked, so it must be supplied.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    water_temperature_c:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 50
+          step: 0.1
+    ph:
+      required: false
+      selector:
+        number:
+          step: 0.01
+    total_alkalinity:
+      required: false
+      selector:
+        number:
+          step: 0.1
+    calcium_hardness:
+      required: false
+      selector:
+        number:
+          step: 0.1
+    tds:
+      required: false
+      selector:
+        number:
+          step: 0.1
+
+calculate_volume:
+  name: Calculate Pool Volume
+  description: Estimate a pool's volume from its dimensions, matching the app's own volume calculator - formulas and the 7.48 gallons-per-cubic-foot constant were reverse-engineered from real app output. Does not save the result - pair with set_volume to apply it.
+  fields:
+    shape:
+      required: true
+      selector:
+        select:
+          options: ["rectangular", "round", "oval", "kidney"]
+    unit:
+      required: false
+      default: "feet"
+      selector:
+        select:
+          options: ["feet", "meters"]
+    length:
+      required: false
+      description: Required for rectangular and oval pools.
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    width:
+      required: false
+      description: Required for rectangular and oval pools.
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    diameter:
+      required: false
+      description: Required for round pools, and for kidney pools (first lobe).
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    diameter_2:
+      required: false
+      description: Required for kidney pools (second lobe).
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    average_depth:
+      required: false
+      description: "For constant-depth pools: provide this, or both shallow_depth and deep_depth."
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    shallow_depth:
+      required: false
+      description: "Rectangular/round/oval: shallow end depth, averaged with deep_depth. Kidney: depth of the 'diameter' lobe specifically, not averaged."
+      selector:
+        number:
+          min: 0
+          step: 0.1
+    deep_depth:
+      required: false
+      description: "Rectangular/round/oval: deep end depth, averaged with shallow_depth. Kidney: depth of the 'diameter_2' lobe specifically, not averaged."
+      selector:
+        number:
+          min: 0
+          step: 0.1
+
+delete_reading:
+  name: Delete Reading
+  description: Delete an entire test session containing a given reading - matches the app's own delete button (removes the whole session, not just one value).
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    result_id:
+      required: true
+      description: The result_id shown in the reading's sensor attributes.
+      selector:
+        text:
+
+edit_reading:
+  name: Edit Reading
+  description: Change the result value of a single existing reading in place, without deleting the rest of its test session. Not possible in the app itself.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    result_id:
+      required: true
+      selector:
+        text:
+    new_result:
+      required: true
+      selector:
+        number:
+          step: 0.01
+
+set_pool_image:
+  name: Set Pool Photo
+  description: Set or change an existing pool's photo.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant
+    image:
+      required: false
+      description: "Pick an existing photo from the Media Browser, or upload one from your computer."
+      selector:
+        media:
+    image_file_path:
+      required: false
+      selector:
+        text:
+    image_base64:
+      required: false
+      selector:
+        text:
+
+clear_pool_image:
+  name: Remove Pool Photo
+  description: Remove an existing pool's photo.
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: poolassistant

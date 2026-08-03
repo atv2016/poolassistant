@@ -1,0 +1,12 @@
+{
+  "domain": "poolassistant",
+  "name": "Pool Assistant",
+  "version": "1.0.0",
+  "config_flow": true,
+  "documentation": "https://github.com/atv2016/poolassistant",
+  "issue_tracker": "https://github.com/atv2016/poolassistant/issues",
+  "requirements": [],
+  "codeowners": ["@atv2016"],
+  "iot_class": "cloud_polling",
+  "integration_type": "hub"
+}
