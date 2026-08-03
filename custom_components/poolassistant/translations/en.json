@@ -127,7 +127,6 @@
   "issues": {
     "pool_deleted": {
       "title": "{name} no longer exists in your Pool Assistant account",
-      "description": "This pool appears to have been deleted from the app (or removed from your account) and can no longer be found. Home Assistant will keep trying and failing to update it until this is resolved.",
       "fix_flow": {
         "step": {
           "confirm": {

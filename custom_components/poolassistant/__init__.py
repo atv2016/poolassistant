@@ -161,6 +161,8 @@ def _device_info_from_existing_readings(coordinator) -> dict:
         "firmwareVersion": reading.get("firmwareVersion", ""),
     }
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 async def _async_register_services(hass: HomeAssistant) -> None:
     if hass.services.has_service(DOMAIN, SERVICE_ADD_CHEMICAL):
         return  # already registered by a previous config entry
