@@ -21,7 +21,7 @@ A Home Assistant integration for Lovibond's Pool Assistant app and Scuba3s smart
 ## Installation
 
 ### Via HACS (recommended)
-1. HACS → ⋮ → Custom repositories → add `https://github.com/YOUR_USERNAME/poolassistant`, category **Integration**
+1. HACS → ⋮ → Custom repositories → add `https://github.com/atv2016/poolassistant`, category **Integration**
 2. Search for "Pool Assistant", install, restart Home Assistant
 
 ### Manual
@@ -49,7 +49,7 @@ Full field details are shown in Developer Tools → Actions once installed.
 
 ## Disclaimer
 
-This integration talks to Pool Assistant's own Firebase backend, reverse-engineered from the app's own network traffic - it isn't officially supported or endorsed by Lovibond. Things may break if they change their backend.
+This integration talks to Pool Assistant's own Firebase backend, reverse-engineered from the app's own network traffic - it is NOT officially supported or endorsed by Lovibond, so please do not reach out to them for support, instead put issues here. If you use this to insert or modify records there is a slight chance your Poolassistant app might not work correctly. You can also expect this integration to stop working completely if they change their backend.
 
 ## License
 
