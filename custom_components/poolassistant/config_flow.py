@@ -12,15 +12,11 @@ from homeassistant.helpers import config_validation as cv, selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import (
-    DOMAIN,
-    PARAMETERS,
-    OPTION_SURFACE_TOOLTIP_IDS,
-    OPTION_IDEAL_RANGES,
-    OPTION_TEMPERATURE_ENTITY,
-    OPTION_POLL_INTERVAL_MINUTES,
-    OPTION_DISABLE_AUTO_DISCOVERY,
-    DEFAULT_POLL_INTERVAL_MINUTES,
+    DOMAIN, PARAMETERS, OPTION_SURFACE_TOOLTIP_IDS, OPTION_IDEAL_RANGES,
+    OPTION_TEMPERATURE_ENTITY, OPTION_POLL_INTERVAL_MINUTES, OPTION_DISABLE_AUTO_DISCOVERY,
+    DEFAULT_POLL_INTERVAL_MINUTES, OPTION_MAX_POOLS, DEFAULT_MAX_POOLS_SAFETY_CAP,
 )
+
 from .firebase import FirebaseAuth
 from .firestore_write import async_create_pool_document, async_list_pools
 
@@ -328,14 +324,16 @@ class PoolAssistantOptionsFlow(config_entries.OptionsFlow):
             polling = user_input.get("polling_section", {})
             discovery = user_input.get("discovery_section", {})
             temperature = user_input.get("temperature_section", {})
+            safety = user_input.get("safety_section", {})
             ranges = user_input.get("ideal_ranges", {})
-
+            
             data = {
                 OPTION_SURFACE_TOOLTIP_IDS: tooltip.get(OPTION_SURFACE_TOOLTIP_IDS, False),
                 OPTION_POLL_INTERVAL_MINUTES: polling.get(
                     OPTION_POLL_INTERVAL_MINUTES, DEFAULT_POLL_INTERVAL_MINUTES
                 ),
                 OPTION_DISABLE_AUTO_DISCOVERY: discovery.get(OPTION_DISABLE_AUTO_DISCOVERY, False),
+                OPTION_MAX_POOLS: safety.get(OPTION_MAX_POOLS, DEFAULT_MAX_POOLS_SAFETY_CAP),
             }
             if temperature.get(OPTION_TEMPERATURE_ENTITY):
                 data[OPTION_TEMPERATURE_ENTITY] = temperature[OPTION_TEMPERATURE_ENTITY]
@@ -382,6 +380,17 @@ class PoolAssistantOptionsFlow(config_entries.OptionsFlow):
                                 OPTION_DISABLE_AUTO_DISCOVERY,
                                 default=current.get(OPTION_DISABLE_AUTO_DISCOVERY, False),
                             ): bool,
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("safety_section"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                OPTION_MAX_POOLS,
+                                default=current.get(OPTION_MAX_POOLS, DEFAULT_MAX_POOLS_SAFETY_CAP),
+                            ): vol.All(vol.Coerce(int), vol.Range(min=1, max=1000)),
                         }
                     ),
                     {"collapsed": False},
