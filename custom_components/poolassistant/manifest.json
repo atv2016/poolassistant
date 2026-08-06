@@ -8,5 +8,5 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/atv2016/poolassistant/issues",
   "requirements": [],
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
