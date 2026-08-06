@@ -221,6 +221,17 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         coordinator = _get_coordinator(hass, call.data["config_entry_id"])
         firebase = coordinator.firebase
 
+        max_pools = coordinator.entry.options.get(OPTION_MAX_POOLS, DEFAULT_MAX_POOLS_SAFETY_CAP)
+        existing_pools = await async_list_pools(
+            coordinator.session, coordinator.entry.data["project_id"], firebase
+        )
+        if len(existing_pools) >= max_pools:
+            raise HomeAssistantError(
+                f"This account already has {len(existing_pools)} pools - refusing to create "
+                f"another automatically (current safety limit: {max_pools}, adjustable in "
+                "this integration's options)."
+            )
+
         image_data_uri = await _async_resolve_image(
             hass, coordinator.session,
             call.data.get("image_file_path"), call.data.get("image_base64"), call.data.get("image"),
