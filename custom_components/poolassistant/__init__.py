@@ -17,10 +17,10 @@ from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from .firebase import FirebaseAuth
 from .coordinator import PoolAssistantCoordinator, most_recent_device_reading
-from .firestore_write import now_ms, new_id, async_create_pool_document
+from .firestore_write import now_ms, new_id, async_create_pool_document, async_list_pools
 from .lsi import calculate_lsi
 from .volume import calculate_pool_volume
-from .const import DOMAIN, PARAMETERS, METHOD_INFO, OPTION_SURFACE_TOOLTIP_IDS
+from .const import DOMAIN, PARAMETERS, METHOD_INFO, OPTION_SURFACE_TOOLTIP_IDS, OPTION_MAX_POOLS, DEFAULT_MAX_POOLS_SAFETY_CAP
 
 _LOGGER = logging.getLogger(__name__)
 
