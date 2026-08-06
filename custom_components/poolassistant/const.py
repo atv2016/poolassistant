@@ -8,6 +8,8 @@ OPTION_IDEAL_RANGES = "ideal_ranges"
 OPTION_TEMPERATURE_ENTITY = "temperature_entity"
 OPTION_POLL_INTERVAL_MINUTES = "poll_interval_minutes"
 OPTION_DISABLE_AUTO_DISCOVERY = "disable_auto_discovery"
+OPTION_MAX_POOLS = "max_pools_safety_cap"
+DEFAULT_MAX_POOLS_SAFETY_CAP = 25
 
 DEFAULT_POLL_INTERVAL_MINUTES = 15
 
