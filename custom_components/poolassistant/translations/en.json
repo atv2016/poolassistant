@@ -66,6 +66,13 @@
               "poll_interval_minutes": "Update interval (minutes)"
             }
           },
+          "safety_section": {
+            "name": "Safety limits",
+            "description": "A ceiling on how many pools create_pool will make automatically - purely a safety net against something like a misfiring automation, not an attempt to enforce anything Lovibond's own backend doesn't already enforce itself.",
+            "data": {
+              "max_pools_safety_cap": "Maximum pools before create_pool refuses to make more"
+            }
+          },
           "discovery_section": {
             "name": "New pool discovery",
             "description": "Turn off if you don't want Home Assistant automatically offering pools created directly in the app.",
